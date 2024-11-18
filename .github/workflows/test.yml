@@ -19,22 +19,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: "package-lock.json"
+          cache: "bun" # Use bun for caching dependencies
+          cache-dependency-path: "bun.lockb"
+
+      - name: Install bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          export PATH="$HOME/.bun/bin:$PATH"
 
       - name: Install dependencies
-        run: npm install
+        run: bun install
 
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
       - name: Run unit tests
-        run: npm run test
+        run: bun run test
         continue-on-error: true
         timeout-minutes: 3
 
       - name: Run integration tests
-        run: npm run playwright
+        run: bun run playwright
         continue-on-error: true
         timeout-minutes: 5
 
@@ -45,7 +50,7 @@ jobs:
           report_paths: "**/unit-test-results.xml"
           check_name: "Unit Tests Report"
 
-      - name: Report intergation test results
+      - name: Report integration test results
         uses: mikepenz/action-junit-report@v2
         if: success() || failure()
         with:
