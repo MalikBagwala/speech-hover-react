@@ -19,27 +19,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "bun" # Use bun for caching dependencies
-          cache-dependency-path: "bun.lockb"
+          cache: "pnpm" # Use pnpm for caching dependencies
+          cache-dependency-path: "pnpm-lock.yaml"
 
-      - name: Install bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          export PATH="$HOME/.bun/bin:$PATH"
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Install dependencies
-        run: bun install
+        run: pnpm install
 
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
       - name: Run unit tests
-        run: bun run test
+        run: pnpm test
         continue-on-error: true
         timeout-minutes: 3
 
       - name: Run integration tests
-        run: bun run playwright
+        run: pnpm playwright
         continue-on-error: true
         timeout-minutes: 5
 
