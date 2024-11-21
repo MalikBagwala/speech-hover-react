@@ -1,12 +1,6 @@
-import {
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  test,
-} from 'vitest';
+import { beforeAll, beforeEach, describe, expect, test } from "vitest";
 
-import { getTopLevelReadableElementsOnPage } from './parser';
+import { getTopLevelReadableElementsOnPage } from "./parser";
 
 const testElement = document.createElement("div");
 
@@ -82,14 +76,15 @@ describe("getTopLevelReadableElementsOnPage", () => {
     </div>
       `;
     const paragraphs = getTopLevelReadableElementsOnPage();
+    console.log(paragraphs, paragraphs.length);
     expect(paragraphs.length).toBe(6);
     expect(paragraphs).toBeExpectedElements([
-      {tagName: "P", textContent: "Paragraph 1"},
-      {tagName: "P", textContent: "Paragraph 2"},
-      {tagName: "P", textContent: "Paragraph 3"},
-      {tagName: "P", textContent: "Paragraph 4"},
-      {tagName: "P", textContent: "Paragraph 5"},
-      {tagName: "P", textContent: "Paragraph 6"},
+      { tagName: "P", textContent: "Paragraph 1" },
+      { tagName: "P", textContent: "Paragraph 2" },
+      { tagName: "P", textContent: "Paragraph 3" },
+      { tagName: "P", textContent: "Paragraph 4" },
+      { tagName: "P", textContent: "Paragraph 5" },
+      { tagName: "P", textContent: "Paragraph 6" },
     ]);
   });
 

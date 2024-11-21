@@ -1,7 +1,3 @@
-/**
- * List of HTML tags that we want to ignore when finding the top level readable elements
- * These elements should not be chosen while rendering the hover player
- */
 const IGNORE_LIST = [
   "H1",
   "H2",
@@ -16,6 +12,10 @@ const IGNORE_LIST = [
   "PRE",
   "SCRIPT",
 ];
+const isIgnored = (element: Element) => IGNORE_LIST.includes(element.tagName);
+
+const isEmptyTextNode = (element: Element) =>
+  element.textContent ? false : true;
 
 /**
  *  **TBD:**
@@ -44,4 +44,26 @@ const IGNORE_LIST = [
  *            </body>;
  *            In this case, #content-1 should not be considered as a top level readable element.
  */
-export function getTopLevelReadableElementsOnPage(): HTMLElement[] {}
+export function getTopLevelReadableElementsOnPage(): HTMLElement[] {
+  let topLevelReadableElements: HTMLElement[] = [];
+  function traverse(element: Element, parentElements: HTMLElement[]) {
+    if (element.children.length) {
+      for (const child of element.children) {
+        traverse(
+          child,
+          element.children.length === 1
+            ? [...parentElements, element as HTMLElement]
+            : [],
+        );
+      }
+    } else {
+      if (isIgnored(element)) return;
+      if (isEmptyTextNode(element)) return;
+      topLevelReadableElements.push(
+        parentElements?.length ? parentElements[0] : (element as HTMLElement),
+      );
+    }
+  }
+  traverse(document.body, []);
+  return topLevelReadableElements;
+}
